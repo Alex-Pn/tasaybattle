@@ -7,11 +7,20 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
 
+    :root {
+      --bg: #000;
+      --text-main: #f5f5f5;
+      --text-soft: #b3b3b3;
+      --text-muted: #888;
+      --accent-red: #ff2740;
+      --border-soft: rgba(255,255,255,0.14);
+    }
+
     html, body {
       height:100%;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color:#f2f2f2;
-      background:#000;
+      color:var(--text-main);
+      background:var(--bg);
       scroll-behavior:smooth;
     }
 
@@ -19,35 +28,36 @@
       overflow-y:auto;
     }
 
-    /* Фоновое видео */
+    /* Фоновое видео в ч/б */
     #bg-video {
       position:fixed;
       top:0; left:0;
       width:100%; height:100%;
       object-fit:cover;
       z-index:-3;
+      filter:grayscale(1) contrast(1.12);
     }
 
-    /* Общая тёмная вуаль */
+    /* Общая вуаль */
     .overlay {
       position:fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background:radial-gradient(circle at top, rgba(0,0,0,0.3) 0, rgba(0,0,0,0.8) 55%, #000 100%);
+      background:radial-gradient(circle at top, rgba(0,0,0,0.35) 0, rgba(0,0,0,0.9) 55%, #000 100%);
       backdrop-filter:blur(2px);
       z-index:-2;
     }
 
-    /* "Шум" поверх всего (фейк-грайн) */
+    /* Лёгкий шум */
     .grain {
       pointer-events:none;
       position:fixed;
       inset:0;
       z-index:-1;
-      opacity:0.18;
+      opacity:0.22;
       background-image:
-        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 2px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px);
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px);
       mix-blend-mode:soft-light;
     }
 
@@ -59,130 +69,121 @@
       justify-content:center;
       align-items:center;
       text-align:center;
-      padding:32px 18px 40px;
+      padding:40px 18px 40px;
       position:relative;
     }
 
-    /* Глитч-тайтл */
+    /* Тайтл с лёгким глитчем, но только в белом/красном */
     .hero-title {
       position:relative;
-      font-size:52px;
-      letter-spacing:0.18em;
+      font-size:50px;
+      letter-spacing:0.22em;
       text-transform:uppercase;
-      margin-bottom:10px;
-      text-shadow:0 0 18px rgba(0,0,0,0.8);
+      margin-bottom:12px;
     }
     .hero-title::before,
     .hero-title::after {
       content:attr(data-text);
       position:absolute;
       inset:0;
-      mix-blend-mode:screen;
       pointer-events:none;
       opacity:0.45;
     }
     .hero-title::before {
+      color:var(--accent-red);
       transform:translate3d(-2px,-1px,0);
-      color:#ff2a45;
-      clip-path:polygon(0 0,100% 0,100% 45%,0 55%);
-      animation:glitch1 2.4s infinite linear alternate-reverse;
+      mix-blend-mode:screen;
+      animation:glitch-red 2.4s infinite linear alternate-reverse;
     }
     .hero-title::after {
-      transform:translate3d(2px,1px,0);
-      color:#3cf0ff;
-      clip-path:polygon(0 45%,100% 35%,100% 100%,0 100%);
-      animation:glitch2 2.1s infinite linear alternate-reverse;
+      color:#fff;
+      transform:translate3d(1px,1px,0);
+      mix-blend-mode:screen;
+      animation:glitch-white 3s infinite linear alternate-reverse;
     }
 
-    @keyframes glitch1 {
+    @keyframes glitch-red {
       0% { transform:translate3d(-2px,-1px,0); }
-      30% { transform:translate3d(-4px,1px,0); }
-      60% { transform:translate3d(-1px,-2px,0); }
-      100% { transform:translate3d(-3px,0,0); }
+      40% { transform:translate3d(-3px,0,0); }
+      100% { transform:translate3d(-1px,-2px,0); }
     }
-    @keyframes glitch2 {
-      0% { transform:translate3d(2px,1px,0); }
-      30% { transform:translate3d(3px,-1px,0); }
-      60% { transform:translate3d(1px,2px,0); }
-      100% { transform:translate3d(4px,0,0); }
+    @keyframes glitch-white {
+      0% { transform:translate3d(1px,1px,0); }
+      40% { transform:translate3d(0,2px,0); }
+      100% { transform:translate3d(2px,0,0); }
     }
 
     .hero-tagline {
-      font-size:15px;
-      color:#d0d0d0;
-      margin-bottom:10px;
-      letter-spacing:0.16em;
+      font-size:13px;
+      color:var(--text-soft);
+      margin-bottom:8px;
+      letter-spacing:0.2em;
       text-transform:uppercase;
     }
 
     .hero-subline {
       font-size:13px;
-      color:#a5a5a5;
-      margin-bottom:26px;
+      color:var(--text-muted);
+      margin-bottom:28px;
       max-width:520px;
+      line-height:1.6;
     }
 
+    /* Навигация под тайтлом — современный текстовый вид */
     .nav-buttons {
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
+      gap:18px;
       justify-content:center;
       margin-bottom:26px;
     }
 
     .nav-btn {
       position:relative;
-      padding:10px 20px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.4);
-      background:rgba(0,0,0,0.65);
-      font-size:12px;
+      padding-bottom:4px;
+      font-size:11px;
       text-transform:uppercase;
-      letter-spacing:0.18em;
+      letter-spacing:0.22em;
       cursor:pointer;
       text-decoration:none;
-      color:#f2f2f2;
-      transition:0.18s ease;
-      overflow:hidden;
+      color:var(--text-soft);
+      border:none;
     }
     .nav-btn::after {
       content:"";
       position:absolute;
-      inset:0;
-      background:linear-gradient(120deg, transparent 0, rgba(255,255,255,0.12) 40%, transparent 100%);
-      transform:translateX(-120%);
-      transition:0.3s ease;
-      opacity:0;
+      left:0;
+      bottom:0;
+      width:0;
+      height:1px;
+      background:var(--accent-red);
+      transition:width 0.18s ease;
     }
     .nav-btn:hover {
-      border-color:#ff2a45;
-      background:rgba(0,0,0,0.85);
-      transform:translateY(-1px);
+      color:var(--text-main);
     }
     .nav-btn:hover::after {
-      transform:translateX(80%);
-      opacity:1;
+      width:100%;
     }
 
     .btn-main {
-      margin-top:4px;
-      padding:14px 32px;
+      margin-top:6px;
+      padding:13px 30px;
       border-radius:999px;
-      border:1px solid #ff2a45;
-      background:#ff2a45;
+      border:1px solid var(--accent-red);
+      background:var(--accent-red);
       color:#050505;
-      font-size:14px;
+      font-size:13px;
       text-transform:uppercase;
-      letter-spacing:0.2em;
+      letter-spacing:0.22em;
       cursor:pointer;
       text-decoration:none;
       transition:0.18s ease;
-      box-shadow:0 0 24px rgba(255,42,69,0.45);
     }
     .btn-main:hover {
-      filter:brightness(1.08);
-      transform:translateY(-1px) scale(1.01);
-      box-shadow:0 0 32px rgba(255,42,69,0.6);
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+      box-shadow:0 0 26px rgba(255,39,64,0.55);
     }
 
     .scroll-hint {
@@ -190,10 +191,10 @@
       bottom:18px;
       left:50%;
       transform:translateX(-50%);
-      font-size:11px;
+      font-size:10px;
       text-transform:uppercase;
-      letter-spacing:0.18em;
-      color:#808080;
+      letter-spacing:0.22em;
+      color:var(--text-muted);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -202,7 +203,7 @@
     .scroll-hint-line {
       width:1px;
       height:22px;
-      background:linear-gradient(to bottom, transparent, #808080);
+      background:linear-gradient(to bottom, transparent, var(--text-muted));
       animation:scrollPulse 1.4s infinite;
     }
     @keyframes scrollPulse {
@@ -211,55 +212,54 @@
       100% { opacity:0; transform:scaleY(0.4); }
     }
 
-    /* Контент ниже */
+    /* Контентный контейнер */
     .content {
-      max-width:960px;
+      max-width:1040px;
       margin:0 auto;
-      padding:32px 18px 60px;
+      padding:32px 24px 60px;
     }
 
-    /* Рваные блоки секций */
+    /* Современные секции: без пузырей, с красным левым бордером */
     .section {
       position:relative;
-      background:rgba(3,3,6,0.88);
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,0.06);
-      padding:22px 20px 24px;
-      margin-bottom:24px;
-      overflow:hidden;
+      margin-bottom:30px;
+      padding:18px 22px 22px;
+      background:rgba(0,0,0,0.78);
+      border-top:1px solid var(--border-soft);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+      border-left:3px solid rgba(255,255,255,0.05);
+      backdrop-filter:blur(6px);
     }
+
     .section::before {
       content:"";
       position:absolute;
-      left:-40px;
-      top:-20px;
-      width:120px;
-      height:140%;
-      background:repeating-linear-gradient(
-        180deg,
-        rgba(255,42,69,0.2) 0,
-        rgba(255,42,69,0.2) 6px,
-        transparent 6px,
-        transparent 11px
-      );
-      opacity:0.45;
-      transform:skewX(-12deg);
-      pointer-events:none;
-    }
-    .section::after {
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:inherit;
-      border:1px solid rgba(255,255,255,0.05);
-      mix-blend-mode:soft-light;
-      opacity:0.7;
-      pointer-events:none;
+      left:0;
+      top:0;
+      height:38px;
+      width:3px;
+      background:var(--accent-red);
     }
 
     .section-inner {
       position:relative;
       z-index:1;
+      display:flex;
+      flex-direction:row;
+      gap:20px;
+    }
+
+    .section-label {
+      min-width:120px;
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:0.22em;
+      color:var(--text-muted);
+      padding-top:2px;
+    }
+
+    .section-body {
+      flex:1;
     }
 
     .section-title {
@@ -267,17 +267,18 @@
       text-transform:uppercase;
       letter-spacing:0.24em;
       margin-bottom:10px;
-      color:#b6b6b6;
+      color:var(--text-soft);
     }
 
     .section p, .section ul {
       font-size:14px;
-      color:#e1e1e1;
+      color:var(--text-main);
       line-height:1.7;
     }
 
     .section ul {
       margin-left:18px;
+      list-style:disc;
     }
 
     .section ul li {
@@ -287,7 +288,7 @@
     /* Скролл-анимации */
     .reveal {
       opacity:0;
-      transform:translateY(18px) scale(0.98);
+      transform:translateY(14px);
       transition:opacity 0.45s ease, transform 0.45s ease;
     }
     .reveal.visible {
@@ -297,11 +298,11 @@
 
     /* FAQ */
     .faq-item {
-      border-bottom:1px solid rgba(255,255,255,0.08);
+      border-bottom:1px solid rgba(255,255,255,0.12);
     }
 
     .faq-question {
-      padding:12px 4px;
+      padding:10px 0;
       cursor:pointer;
       display:flex;
       justify-content:space-between;
@@ -315,17 +316,16 @@
 
     .faq-toggle {
       font-size:16px;
-      opacity:0.7;
-      transition:transform 0.2s ease;
+      opacity:0.65;
+      transition:transform 0.2s ease, color 0.2s ease;
     }
 
     .faq-answer {
       max-height:0;
       overflow:hidden;
       font-size:13px;
-      color:#d0d0d0;
+      color:var(--text-soft);
       transition:max-height 0.25s ease;
-      padding:0 4px;
     }
 
     .faq-answer-inner {
@@ -333,27 +333,42 @@
     }
 
     .faq-item.open .faq-answer {
-      max-height:260px; /* при необходимости можно увеличить */
+      max-height:260px;
+    }
+
+    .faq-item.open .faq-question {
+      color:var(--text-main);
     }
 
     .faq-item.open .faq-toggle {
       transform:rotate(90deg);
+      color:var(--accent-red);
     }
 
     footer {
       text-align:center;
       font-size:11px;
-      color:#b0b0b0;
+      color:var(--text-muted);
       padding:10px 0 24px;
     }
 
-    @media(max-width:600px){
-      .hero-title { font-size:34px; letter-spacing:0.14em; }
-      .hero-tagline { font-size:12px; }
+    @media(max-width:720px){
+      .hero-title { font-size:34px; letter-spacing:0.16em; }
+      .hero-tagline { font-size:11px; letter-spacing:0.18em; }
       .hero-subline { font-size:12px; }
-      .btn-main { font-size:12px; padding:11px 22px; letter-spacing:0.16em; }
-      .nav-btn { font-size:10px; padding:8px 14px; letter-spacing:0.14em; }
-      .section::before { left:-60px; opacity:0.35; }
+      .btn-main { font-size:11px; padding:11px 20px; letter-spacing:0.18em; }
+
+      .content { padding:24px 16px 50px; }
+
+      .section-inner {
+        flex-direction:column;
+        gap:6px;
+      }
+
+      .section-label {
+        min-width:auto;
+        font-size:9px;
+      }
     }
   </style>
 </head>
@@ -393,112 +408,127 @@
 
     <section id="concept" class="section reveal">
       <div class="section-inner">
-        <div class="section-title">концепция</div>
-        <p>
-          RAW BATTLE — это точка сборки русскоязычного андерграунда в Германии. 
-          Здесь не требуют идеального сведения или дорогих студий: важнее, что ты говоришь, 
-          как подаёшь и какую реальность за собой тащишь.
-        </p>
-        <p>
-          Батл создан для тех, кто живёт между районами, странами и языками, 
-          но всё равно пишет и записывает. Мы фиксируем имена, которые звучат честно, 
-          даже если записи сделаны в спальне или на кухне.
-        </p>
+        <div class="section-label">раздел 01</div>
+        <div class="section-body">
+          <div class="section-title">концепция</div>
+          <p>
+            RAW BATTLE — это точка сборки русскоязычного андерграунда в Германии. 
+            Здесь не требуют идеального сведения или дорогих студий: важнее, что ты говоришь, 
+            как подаёшь и какую реальность за собой тащишь.
+          </p>
+          <p>
+            Батл создан для тех, кто живёт между районами, странами и языками, 
+            но всё равно пишет и записывает. Мы фиксируем имена, которые звучат честно, 
+            даже если записи сделаны в спальне или на кухне.
+          </p>
+        </div>
       </div>
     </section>
 
     <section id="rules" class="section reveal">
       <div class="section-inner">
-        <div class="section-title">правила</div>
-        <ul>
-          <li><strong>Участники:</strong> русскоязычные артисты из Германии и Европы.</li>
-          <li><strong>Формат:</strong> 1 трек на раунд, длительность до 2:30.</li>
-          <li><strong>Биты:</strong> любые (собственные / арендованные / бесплатные).</li>
-          <li><strong>Языки:</strong> русский, немецкий, миксы — без ограничений.</li>
-          <li><strong>Сведение:</strong> не ключевой критерий, но голос должен быть слышен.</li>
-          <li><strong>Контент:</strong> без тупого расизма и призывов к насилию ради хайпа.</li>
-        </ul>
+        <div class="section-label">раздел 02</div>
+        <div class="section-body">
+          <div class="section-title">правила</div>
+          <ul>
+            <li><strong>Участники:</strong> русскоязычные артисты из Германии и Европы.</li>
+            <li><strong>Формат:</strong> 1 трек на раунд, длительность до 2:30.</li>
+            <li><strong>Биты:</strong> любые (собственные / арендованные / бесплатные).</li>
+            <li><strong>Языки:</strong> русский, немецкий, миксы — без ограничений.</li>
+            <li><strong>Сведение:</strong> не ключевой критерий, но голос должен быть слышен.</li>
+            <li><strong>Контент:</strong> без тупого расизма и призывов к насилию ради хайпа.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <section id="prizes" class="section reveal">
       <div class="section-inner">
-        <div class="section-title">призовые</div>
-        <p>
-          Призовой фонд объявляется перед стартом раунда. Пример:
-        </p>
-        <ul>
-          <li>1 место — €XXX + отдельный разбор трека и промо.</li>
-          <li>2 место — €YYY + плейлист и упоминания в соцсетях батла.</li>
-          <li>Отдельный спецприз — за странное, глубокое или нестандартное мышление.</li>
-        </ul>
-        <p>
-          Деньги — это бонус. Главная награда — зафиксировать своё имя и звук.
-        </p>
+        <div class="section-label">раздел 03</div>
+        <div class="section-body">
+          <div class="section-title">призовые</div>
+          <p>
+            Призовой фонд объявляется перед стартом раунда. Пример:
+          </p>
+          <ul>
+            <li>1 место — €XXX + отдельный разбор трека и промо.</li>
+            <li>2 место — €YYY + плейлист и упоминания в соцсетях батла.</li>
+            <li>Отдельный спецприз — за странное, глубокое или нестандартное мышление.</li>
+          </ul>
+          <p>
+            Деньги — это бонус. Главная награда — зафиксировать своё имя и звук.
+          </p>
+        </div>
       </div>
     </section>
 
     <section id="submit" class="section reveal">
       <div class="section-inner">
-        <div class="section-title">участие</div>
-        <p>
-          Подать трек можно через форму. Там ты укажешь свой ник, город, контакты и загрузишь аудио.
-        </p>
-        <p style="margin:10px 0;">
-          <a href="https://example.com" target="_blank" class="btn-main" style="display:inline-block; text-decoration:none;">
-            открыть форму для участия
-          </a>
-        </p>
-        <p style="font-size:12px; color:#bbbbbb; margin-top:4px;">
-          Здесь позже будет реальная ссылка: Google Form, Telegram-бот или другой удобный вариант.
-        </p>
+        <div class="section-label">раздел 04</div>
+        <div class="section-body">
+          <div class="section-title">участие</div>
+          <p>
+            Подать трек можно через форму. Там ты укажешь свой ник, город, контакты и загрузишь аудио.
+          </p>
+          <p style="margin:10px 0;">
+            <a href="https://example.com" target="_blank" class="btn-main" style="display:inline-block; text-decoration:none;">
+              открыть форму для участия
+            </a>
+          </p>
+          <p style="font-size:12px; color:var(--text-soft); margin-top:4px;">
+            Здесь позже будет реальная ссылка: Google Form, Telegram-бот или другой удобный вариант.
+          </p>
+        </div>
       </div>
     </section>
 
     <!-- FAQ -->
     <section id="faq" class="section reveal">
       <div class="section-inner">
-        <div class="section-title">faq</div>
+        <div class="section-label">раздел 05</div>
+        <div class="section-body">
+          <div class="section-title">faq</div>
 
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>Нужно ли жить в Германии, чтобы участвовать?</span>
-            <span class="faq-toggle">▶</span>
-          </div>
-          <div class="faq-answer">
-            <div class="faq-answer-inner">
-              Основной фокус — артисты, живущие в Германии, но участие из других стран Европы возможно.
-              Главное — чтобы ты мог соблюдать дедлайны и быть на связи.
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Нужно ли жить в Германии, чтобы участвовать?</span>
+              <span class="faq-toggle">▶</span>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Основной фокус — артисты, живущие в Германии, но участие из других стран Европы возможно.
+                Главное — чтобы ты мог соблюдать дедлайны и быть на связи.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>Можно ли использовать уже выпущенный трек?</span>
-            <span class="faq-toggle">▶</span>
-          </div>
-          <div class="faq-answer">
-            <div class="faq-answer-inner">
-              Желательно писать трек специально под батл. Если трек уже выходил, это нужно указать
-              при подаче и дать ссылку.
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Можно ли использовать уже выпущенный трек?</span>
+              <span class="faq-toggle">▶</span>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Желательно писать трек специально под батл. Если трек уже выходил, это нужно указать
+                при подаче и дать ссылку.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="faq-item">
-          <div class="faq-question">
-            <span>Насколько важен уровень сведения?</span>
-            <span class="faq-toggle">▶</span>
-          </div>
-          <div class="faq-answer">
-            <div class="faq-answer-inner">
-              Идеальный микс не обязателен. Важно, чтобы голос был слышен и трек не превращался
-              в кашу. Оцениваются текст, подача, идея и атмосфера.
+          <div class="faq-item">
+            <div class="faq-question">
+              <span>Насколько важен уровень сведения?</span>
+              <span class="faq-toggle">▶</span>
+            </div>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Идеальный микс не обязателен. Важно, чтобы голос был слышен и трек не превращался
+                в кашу. Оцениваются текст, подача, идея и атмосфера.
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   </div>
