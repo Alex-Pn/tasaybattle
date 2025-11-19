@@ -5,23 +5,27 @@
   <title>RAW BATTLE // GERMANY</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+
     * { margin:0; padding:0; box-sizing:border-box; }
 
     :root {
-      --bg: #000;
+      --bg: #040404;
       --text-main: #f5f5f5;
       --text-soft: #b3b3b3;
       --text-muted: #888;
       --accent-red: #ff2740;
+      --acid-green: #d0ff3d;
       --border-soft: rgba(255,255,255,0.14);
     }
 
     html, body {
       height:100%;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Space Grotesk", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color:var(--text-main);
       background:var(--bg);
       scroll-behavior:smooth;
+      cursor:crosshair;
     }
 
     body {
@@ -43,7 +47,10 @@
       position:fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background:radial-gradient(circle at top, rgba(0,0,0,0.35) 0, rgba(0,0,0,0.9) 55%, #000 100%);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,39,64,0.08), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(208,255,61,0.08), transparent 28%),
+        radial-gradient(circle at center, rgba(0,0,0,0.35) 0, rgba(0,0,0,0.9) 55%, #000 100%);
       backdrop-filter:blur(2px);
       z-index:-2;
     }
@@ -54,11 +61,22 @@
       position:fixed;
       inset:0;
       z-index:-1;
-      opacity:0.22;
+      opacity:0.26;
       background-image:
         repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px);
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(45deg, rgba(208,255,61,0.05) 0 2px, transparent 2px 6px);
       mix-blend-mode:soft-light;
+    }
+
+    /* диагональный шум-бар */
+    .slash {
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:linear-gradient(120deg, transparent 0 52%, rgba(255,39,64,0.06) 53%, transparent 55%);
+      mix-blend-mode:screen;
+      z-index:-1;
     }
 
     /* Центровой экран */
@@ -71,15 +89,31 @@
       text-align:center;
       padding:40px 18px 40px;
       position:relative;
+      isolation:isolate;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      bottom:12%;
+      left:50%;
+      transform:translateX(-50%);
+      width:340px;
+      height:340px;
+      background:conic-gradient(from 140deg, rgba(255,39,64,0.08), rgba(208,255,61,0.06), transparent 50%);
+      filter:blur(40px);
+      opacity:0.6;
+      z-index:-1;
     }
 
     /* Тайтл с лёгким глитчем, но только в белом/красном */
     .hero-title {
       position:relative;
-      font-size:50px;
+      font-size:54px;
       letter-spacing:0.22em;
       text-transform:uppercase;
       margin-bottom:12px;
+      text-shadow:0 0 22px rgba(255,39,64,0.25);
     }
     .hero-title::before,
     .hero-title::after {
@@ -114,19 +148,25 @@
     }
 
     .hero-tagline {
-      font-size:13px;
-      color:var(--text-soft);
+      font-size:12px;
+      color:var(--acid-green);
       margin-bottom:8px;
-      letter-spacing:0.2em;
+      letter-spacing:0.22em;
       text-transform:uppercase;
+      font-weight:600;
     }
 
     .hero-subline {
       font-size:13px;
       color:var(--text-muted);
-      margin-bottom:28px;
-      max-width:520px;
-      line-height:1.6;
+      margin-bottom:30px;
+      max-width:620px;
+      line-height:1.7;
+      background:rgba(0,0,0,0.55);
+      border:1px solid rgba(255,255,255,0.08);
+      padding:12px 16px;
+      border-radius:8px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.35);
     }
 
     /* Навигация под тайтлом — современный текстовый вид */
@@ -135,7 +175,7 @@
       flex-wrap:wrap;
       gap:18px;
       justify-content:center;
-      margin-bottom:26px;
+      margin-bottom:18px;
     }
 
     .nav-btn {
@@ -148,6 +188,9 @@
       text-decoration:none;
       color:var(--text-soft);
       border:none;
+      background:linear-gradient(90deg, rgba(255,39,64,0.2), rgba(255,39,64,0));
+      background-size:200% 100%;
+      transition:background-position 0.2s ease, color 0.18s ease;
     }
     .nav-btn::after {
       content:"";
@@ -161,6 +204,7 @@
     }
     .nav-btn:hover {
       color:var(--text-main);
+      background-position:100% 0;
     }
     .nav-btn:hover::after {
       width:100%;
@@ -171,7 +215,7 @@
       padding:13px 30px;
       border-radius:999px;
       border:1px solid var(--accent-red);
-      background:var(--accent-red);
+      background:linear-gradient(120deg, var(--accent-red), #ff6d8a);
       color:#050505;
       font-size:13px;
       text-transform:uppercase;
@@ -179,11 +223,49 @@
       cursor:pointer;
       text-decoration:none;
       transition:0.18s ease;
+      box-shadow:0 0 0 1px rgba(255,255,255,0.05);
     }
     .btn-main:hover {
       filter:brightness(1.05);
-      transform:translateY(-1px);
-      box-shadow:0 0 26px rgba(255,39,64,0.55);
+      transform:translateY(-1px) rotate(-0.5deg);
+      box-shadow:0 0 26px rgba(255,39,64,0.55), inset 0 0 0 1px rgba(0,0,0,0.25);
+    }
+
+    .hero-meta {
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:14px;
+      font-size:11px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      color:var(--text-soft);
+    }
+
+    .pill {
+      border:1px solid rgba(255,255,255,0.22);
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.4);
+      box-shadow:0 12px 30px rgba(0,0,0,0.25);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .pill-dot {
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent-red);
+      box-shadow:0 0 0 6px rgba(255,39,64,0.12);
+      animation:pulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { transform:scale(0.85); opacity:0.8; }
+      50% { transform:scale(1.15); opacity:1; }
+      100% { transform:scale(0.85); opacity:0.8; }
     }
 
     .scroll-hint {
@@ -214,9 +296,24 @@
 
     /* Контентный контейнер */
     .content {
-      max-width:1040px;
+      max-width:1160px;
       margin:0 auto;
-      padding:32px 24px 60px;
+      padding:32px 24px 90px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .content::before {
+      content:"RAW //";
+      position:absolute;
+      top:-40px;
+      right:-140px;
+      font-size:240px;
+      letter-spacing:-0.04em;
+      color:rgba(255,255,255,0.02);
+      transform:rotate(-10deg);
+      pointer-events:none;
+      white-space:nowrap;
     }
 
     /* Современные секции: без пузырей, с красным левым бордером */
@@ -224,11 +321,12 @@
       position:relative;
       margin-bottom:30px;
       padding:18px 22px 22px;
-      background:rgba(0,0,0,0.78);
-      border-top:1px solid var(--border-soft);
-      border-bottom:1px solid rgba(255,255,255,0.06);
-      border-left:3px solid rgba(255,255,255,0.05);
-      backdrop-filter:blur(6px);
+      background:linear-gradient(135deg, rgba(0,0,0,0.85), rgba(10,10,10,0.7));
+      border:1px solid rgba(255,255,255,0.07);
+      border-left:3px solid rgba(255,255,255,0.1);
+      backdrop-filter:blur(8px);
+      box-shadow:0 22px 60px rgba(0,0,0,0.35);
+      overflow:hidden;
     }
 
     .section::before {
@@ -236,9 +334,18 @@
       position:absolute;
       left:0;
       top:0;
-      height:38px;
+      height:42px;
       width:3px;
-      background:var(--accent-red);
+      background:linear-gradient(var(--accent-red), rgba(255,39,64,0));
+    }
+
+    .section::after {
+      content:"";
+      position:absolute;
+      inset:1px;
+      border:1px dashed rgba(255,255,255,0.06);
+      pointer-events:none;
+      mask:linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,1));
     }
 
     .section-inner {
@@ -283,6 +390,115 @@
 
     .section ul li {
       margin-bottom:4px;
+    }
+
+    .sticker {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.15);
+      background:rgba(255,255,255,0.05);
+      font-size:11px;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      margin:6px 6px 10px 0;
+      box-shadow:0 12px 24px rgba(0,0,0,0.35);
+      transform:rotate(-1.5deg);
+    }
+
+    .sticker .pill-dot {
+      box-shadow:none;
+    }
+
+    .poster-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+      gap:16px;
+      margin-top:12px;
+    }
+
+    .poster-card {
+      position:relative;
+      padding:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:radial-gradient(circle at 20% 20%, rgba(255,39,64,0.08), rgba(0,0,0,0.7));
+      color:var(--text-main);
+      overflow:hidden;
+      min-height:180px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      isolation:isolate;
+      box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    }
+
+    .poster-card::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 100% 0%, rgba(208,255,61,0.08), transparent 45%);
+      mix-blend-mode:screen;
+      z-index:0;
+    }
+
+    .poster-top {
+      display:flex;
+      justify-content:space-between;
+      font-size:11px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:var(--text-soft);
+    }
+
+    .poster-title {
+      font-size:16px;
+      letter-spacing:0.08em;
+      text-transform:uppercase;
+      font-weight:700;
+      z-index:1;
+    }
+
+    .poster-note {
+      font-size:12px;
+      color:var(--text-soft);
+      z-index:1;
+      line-height:1.5;
+    }
+
+    .ticker {
+      position:sticky;
+      top:0;
+      background:rgba(0,0,0,0.65);
+      border:1px solid rgba(255,255,255,0.08);
+      border-left:4px solid var(--accent-red);
+      padding:12px 0;
+      overflow:hidden;
+      margin-bottom:18px;
+      z-index:3;
+      backdrop-filter:blur(8px);
+      box-shadow:0 12px 30px rgba(0,0,0,0.35);
+    }
+
+    .ticker-track {
+      display:flex;
+      animation:marquee 18s linear infinite;
+      gap:34px;
+      padding-left:34px;
+      text-transform:uppercase;
+      font-size:12px;
+      letter-spacing:0.18em;
+      color:var(--text-soft);
+    }
+
+    .ticker-track strong {
+      color:var(--accent-red);
+    }
+
+    @keyframes marquee {
+      0% { transform:translateX(0); }
+      100% { transform:translateX(-50%); }
     }
 
     /* Скролл-анимации */
@@ -380,9 +596,19 @@
   </video>
   <div class="overlay"></div>
   <div class="grain"></div>
+  <div class="slash"></div>
 
   <!-- Верхний экран -->
   <section class="hero">
+    <div class="hero-meta">
+      <div class="pill">
+        <span class="pill-dot"></span>
+        live / berlin underground feed
+      </div>
+      <div class="pill" style="border-color:rgba(208,255,61,0.4); color:var(--acid-green);">
+        coords: 52°31'N · 13°24'E
+      </div>
+    </div>
     <div class="hero-title" data-text="RAW BATTLE">RAW BATTLE</div>
     <div class="hero-tagline">– слоган, концепция –</div>
     <div class="hero-subline">
@@ -393,6 +619,7 @@
       <a href="#concept" class="nav-btn">концепция</a>
       <a href="#rules" class="nav-btn">правила</a>
       <a href="#prizes" class="nav-btn">призовые</a>
+      <a href="#vibe" class="nav-btn">манифест</a>
     </div>
 
     <a href="#submit" class="btn-main">участвовать</a>
@@ -404,7 +631,69 @@
   </section>
 
   <!-- Контентные блоки -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>raw battle // никаких мажорных правил</span>
+      <span><strong>дедлайн = дисциплина</strong></span>
+      <span>звук из спальни = ок</span>
+      <span>мы фиксируем имена</span>
+      <span>raw battle // никаких мажорных правил</span>
+      <span><strong>дедлайн = дисциплина</strong></span>
+      <span>звук из спальни = ок</span>
+      <span>мы фиксируем имена</span>
+    </div>
+  </div>
   <div class="content">
+
+    <section id="vibe" class="section reveal">
+      <div class="section-inner">
+        <div class="section-label">раздел 00</div>
+        <div class="section-body">
+          <div class="section-title">манифест</div>
+          <div class="sticker">
+            <span class="pill-dot"></span>
+            <span>no velvet rope</span>
+          </div>
+          <div class="sticker" style="transform:rotate(1.5deg); background:rgba(208,255,61,0.08); color:var(--acid-green);">
+            <span>германия / европа</span>
+          </div>
+          <p>
+            Сцена — это не сцена без шума, шипения и ошибок. RAW BATTLE держит фокус на героях,
+            которые пишут в наушниках метро, пишут ночью после смены, пишут на двух языках сразу.
+          </p>
+          <p>
+            Всё, что нужно — это голос и дерзость. Остальное — наслоение текстур, рефренов и
+            личных историй. Мы выбираем угол, который не блестит, но цепляет.
+          </p>
+          <div class="poster-grid">
+            <div class="poster-card">
+              <div class="poster-top">
+                <span>noise channel</span>
+                <span>01</span>
+              </div>
+              <div class="poster-title">кассеты, скриншоты, дропы</div>
+              <div class="poster-note">Присылай фрагменты черновиков, необработанные голосовые, ссылки на демки — в спецканал тг.</div>
+            </div>
+            <div class="poster-card">
+              <div class="poster-top">
+                <span>voice check</span>
+                <span>02</span>
+              </div>
+              <div class="poster-title">1 минута без бита</div>
+              <div class="poster-note">Для тех, кто хочет показать текст без аранжировки. Чистый тон, без автотюна.</div>
+            </div>
+            <div class="poster-card">
+              <div class="poster-top">
+                <span>side quest</span>
+                <span>03</span>
+              </div>
+              <div class="poster-title">арт-обложка</div>
+              <div class="poster-note">Каждый раунд — новая обложка. Лучшая работа публикуется вместе с релизом плейлиста.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section id="concept" class="section reveal">
       <div class="section-inner">
